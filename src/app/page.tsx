@@ -75,6 +75,7 @@ export default function Home() {
     try {
       const parsedJson = JSON.parse(jsonInput);
       const formattedJson = JSON.stringify(parsedJson, null, 2);
+      setJsonInput(formattedJson);
       setOutput(formattedJson);
       setStatus("success");
     } catch (error) {
@@ -158,7 +159,7 @@ export default function Home() {
               <CardDescription>Paste your JSON below or upload a file.</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-               <ScrollArea className="h-[400px] w-full rounded-md border font-mono">
+               <ScrollArea className="h-full w-full rounded-md border font-mono">
                 <Textarea
                   placeholder='{ "key": "value" }'
                   value={jsonInput}
@@ -167,7 +168,7 @@ export default function Home() {
                     setOutput('');
                     setStatus('idle');
                   }}
-                  className="h-full w-full resize-none border-0 focus-visible:ring-0"
+                  className="h-full min-h-[400px] w-full resize-none border-0 focus-visible:ring-0"
                   aria-label="JSON Input"
                 />
               </ScrollArea>
