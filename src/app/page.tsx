@@ -175,7 +175,7 @@ export default function Home() {
               <CardDescription>Paste your JSON below or upload a file.</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-               <ScrollArea className="h-full w-full rounded-md border font-mono">
+               <ScrollArea className="h-[468px] w-full rounded-md border font-mono">
                 <Textarea
                   placeholder='{ "key": "value" }'
                   value={jsonInput}
@@ -189,10 +189,11 @@ export default function Home() {
                 />
               </ScrollArea>
             </CardContent>
-            <CardFooter className="grid grid-cols-3 gap-2">
-                <Button onClick={handleFormat}>
-                  <Wand2 className="mr-2 h-4 w-4" /> Format
-                </Button>
+            <CardFooter className="flex flex-col gap-2">
+              <Button onClick={handleFormat} className="w-full">
+                <Wand2 className="mr-2 h-4 w-4" /> Format
+              </Button>
+              <div className="grid grid-cols-2 gap-2 w-full">
                 <Button onClick={handleValidate} variant="secondary">
                   <CheckCircle2 className="mr-2 h-4 w-4" /> Validate
                 </Button>
@@ -206,10 +207,11 @@ export default function Home() {
                   className="hidden"
                   accept=".json"
                 />
-                 <Button onClick={handleClear} variant="destructive" className="col-start-3">
+                 <Button onClick={handleClear} variant="destructive" className="col-span-2">
                   <Trash2 className="mr-2 h-4 w-4" /> Clear
                 </Button>
-              </CardFooter>
+              </div>
+            </CardFooter>
           </Card>
 
           {/* Output Card */}
@@ -222,7 +224,7 @@ export default function Home() {
                <ScrollArea
                 aria-live="polite"
                 className={cn(
-                  "w-full h-full min-h-[468px] rounded-md border p-4 bg-muted/30 font-mono",
+                  "w-full h-[524px] rounded-md border p-4 bg-muted/30 font-mono",
                   {
                     "border-green-500/50 text-green-700 dark:text-green-400": status === "success",
                     "border-red-500/50 text-red-700 dark:text-red-400": status === "error",
@@ -232,8 +234,7 @@ export default function Home() {
                 {getOutputContent()}
               </ScrollArea>
             </CardContent>
-             <CardFooter className="flex flex-col items-center p-6 pt-0">
-                <p className="text-xs text-muted-foreground mb-2 w-full text-center">Click the button below to copy the result.</p>
+             <CardFooter className="flex flex-col items-center p-6 pt-4">
                 <Button
                   onClick={handleCopy}
                   className={cn(
