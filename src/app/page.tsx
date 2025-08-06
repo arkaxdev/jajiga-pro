@@ -144,16 +144,16 @@ export default function Home() {
   };
 
   return (
-    <main className="min-h-screen bg-background text-foreground p-4 sm:p-6 md:p-8 font-headline">
+    <main className="min-h-screen bg-background text-foreground p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-8">
+        <header className="text-center mb-10">
           <h1 className="text-4xl md:text-5xl font-bold text-primary">JSON Formatter & Validator</h1>
-          <p className="text-muted-foreground mt-2 text-lg">A simple and elegant tool to beautify and validate your JSON data.</p>
+          <p className="text-muted-foreground mt-3 text-lg">A simple and elegant tool to beautify and validate your JSON data.</p>
         </header>
 
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Input Card */}
-          <Card className="flex flex-col">
+          <Card className="flex flex-col h-full shadow-lg">
             <CardHeader>
               <CardTitle>Input</CardTitle>
               <CardDescription>Paste your JSON below or upload a file.</CardDescription>
@@ -168,13 +168,13 @@ export default function Home() {
                     setOutput('');
                     setStatus('idle');
                   }}
-                  className="h-full min-h-[400px] w-full resize-none border-0 focus-visible:ring-0"
+                  className="h-full min-h-[400px] w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
                   aria-label="JSON Input"
                 />
               </ScrollArea>
             </CardContent>
             <CardFooter className="flex flex-wrap gap-2 justify-start">
-              <Button onClick={handleFormat} className="bg-accent hover:bg-accent/90">
+              <Button onClick={handleFormat}>
                 <Wand2 className="mr-2 h-4 w-4" /> Format
               </Button>
               <Button onClick={handleValidate} variant="secondary">
@@ -203,7 +203,7 @@ export default function Home() {
           </Card>
 
           {/* Output Card */}
-          <Card className="flex flex-col">
+          <Card className="flex flex-col h-full shadow-lg">
             <CardHeader>
               <CardTitle>Result</CardTitle>
               <CardDescription>Validation or formatting results will appear here.</CardDescription>
@@ -212,7 +212,7 @@ export default function Home() {
                <ScrollArea
                 aria-live="polite"
                 className={cn(
-                  "w-full h-[400px] rounded-md border p-4 bg-muted/50 font-mono",
+                  "w-full h-full min-h-[468px] rounded-md border p-4 bg-muted/30 font-mono",
                   {
                     "border-green-500/50 text-green-700 dark:text-green-400": status === "success",
                     "border-red-500/50 text-red-700 dark:text-red-400": status === "error",
@@ -229,7 +229,7 @@ export default function Home() {
           </Card>
         </div>
         
-        <footer className="text-center mt-12 py-4 border-t">
+        <footer className="text-center mt-16 py-6 border-t">
           <p className="text-sm text-muted-foreground">
             Built with love and code. Licensed under MIT.
           </p>
