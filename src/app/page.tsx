@@ -74,8 +74,7 @@ export default function Home() {
     try {
       const parsedJson = JSON.parse(jsonInput);
       const formattedJson = JSON.stringify(parsedJson, null, 2);
-      setJsonInput(formattedJson);
-      setOutput("JSON formatted successfully.");
+      setOutput(formattedJson);
       setStatus("success");
     } catch (error) {
        if (error instanceof Error) {
@@ -111,18 +110,35 @@ export default function Home() {
   };
 
   const handleCopy = () => {
-    if (!jsonInput) {
-       toast({ title: "Nothing to copy", description: "The input is empty." });
+    const textToCopy = status === 'success' && output.startsWith('{') ? output : jsonInput;
+    if (!textToCopy) {
+       toast({ title: "Nothing to copy", description: "There is no content to copy." });
        return;
     }
-    navigator.clipboard.writeText(jsonInput);
-    toast({ title: "Copied to clipboard!", description: "The JSON from the input has been copied." });
+    navigator.clipboard.writeText(textToCopy);
+    toast({ title: "Copied to clipboard!", description: "The content has been copied." });
   };
 
   const statusIcons = {
     success: <CheckCircle2 className="h-5 w-5 text-green-500" />,
     error: <XCircle className="h-5 w-5 text-red-500" />,
     idle: null,
+  };
+
+  const getOutputContent = () => {
+    if (status === 'success' && (output.startsWith('{') || output.startsWith('['))) {
+      return (
+        <pre className="whitespace-pre-wrap break-all font-mono text-sm">
+          <code>{output}</code>
+        </pre>
+      );
+    }
+    return (
+      <div className="flex items-center gap-2 font-medium">
+        {statusIcons[status]}
+        <span>{output || "Awaiting your command..."}</span>
+      </div>
+    );
   };
 
   return (
@@ -144,13 +160,17 @@ export default function Home() {
               <Textarea
                 placeholder='{ "key": "value" }'
                 value={jsonInput}
-                onChange={(e) => setJsonInput(e.target.value)}
+                onChange={(e) => {
+                  setJsonInput(e.target.value);
+                  setOutput('');
+                  setStatus('idle');
+                }}
                 className="h-full min-h-[400px] resize-none font-mono text-sm"
                 aria-label="JSON Input"
               />
             </CardContent>
             <CardFooter className="flex flex-wrap gap-2 justify-start">
-              <Button onClick={handleFormat} className="bg-primary hover:bg-primary/90">
+              <Button onClick={handleFormat} className="bg-accent hover:bg-accent/90">
                 <Wand2 className="mr-2 h-4 w-4" /> Format
               </Button>
               <Button onClick={handleValidate} variant="secondary">
@@ -185,10 +205,10 @@ export default function Home() {
               <CardDescription>Validation or formatting results will appear here.</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-              <div
+               <div
                 aria-live="polite"
                 className={cn(
-                  "w-full h-full min-h-[400px] rounded-md border p-4 text-sm bg-muted/50",
+                  "w-full h-full min-h-[400px] rounded-md border p-4 bg-muted/50 overflow-auto",
                   {
                     "border-green-500/50 text-green-700 dark:text-green-400": status === "success",
                     "border-red-500/50 text-red-700 dark:text-red-400": status === "error",
@@ -196,14 +216,11 @@ export default function Home() {
                   }
                 )}
               >
-                <div className="flex items-center gap-2 mb-2 font-medium">
-                  {statusIcons[status]}
-                  <span>{output || "Awaiting your command..."}</span>
-                </div>
+                {getOutputContent()}
               </div>
             </CardContent>
              <CardFooter>
-                <p className="text-xs text-muted-foreground">The formatted JSON will replace the content in the input area for easy copying.</p>
+                <p className="text-xs text-muted-foreground">Click the "Copy" button above to copy the input or the formatted result.</p>
              </CardFooter>
           </Card>
         </div>
