@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
 import { Wand2, CheckCircle2, XCircle, Trash2, Upload, FileJson, ClipboardCopy } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { ScrollArea } from "@/components/ui/scroll-area";
 
 type Status = "idle" | "success" | "error";
 
@@ -110,7 +111,7 @@ export default function Home() {
   };
 
   const handleCopy = () => {
-    const textToCopy = status === 'success' && output.startsWith('{') ? output : jsonInput;
+    const textToCopy = status === 'success' && (output.startsWith('{') || output.startsWith('[')) ? output : jsonInput;
     if (!textToCopy) {
        toast({ title: "Nothing to copy", description: "There is no content to copy." });
        return;
@@ -128,7 +129,7 @@ export default function Home() {
   const getOutputContent = () => {
     if (status === 'success' && (output.startsWith('{') || output.startsWith('['))) {
       return (
-        <pre className="whitespace-pre-wrap break-all font-mono text-sm">
+        <pre className="text-sm">
           <code>{output}</code>
         </pre>
       );
@@ -157,17 +158,19 @@ export default function Home() {
               <CardDescription>Paste your JSON below or upload a file.</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-              <Textarea
-                placeholder='{ "key": "value" }'
-                value={jsonInput}
-                onChange={(e) => {
-                  setJsonInput(e.target.value);
-                  setOutput('');
-                  setStatus('idle');
-                }}
-                className="h-full min-h-[400px] resize-none font-mono text-sm"
-                aria-label="JSON Input"
-              />
+              <ScrollArea className="h-full min-h-[400px] rounded-md border font-mono">
+                <Textarea
+                  placeholder='{ "key": "value" }'
+                  value={jsonInput}
+                  onChange={(e) => {
+                    setJsonInput(e.target.value);
+                    setOutput('');
+                    setStatus('idle');
+                  }}
+                  className="h-full min-h-[400px] resize-none border-0 focus-visible:ring-0"
+                  aria-label="JSON Input"
+                />
+              </ScrollArea>
             </CardContent>
             <CardFooter className="flex flex-wrap gap-2 justify-start">
               <Button onClick={handleFormat} className="bg-accent hover:bg-accent/90">
@@ -205,10 +208,10 @@ export default function Home() {
               <CardDescription>Validation or formatting results will appear here.</CardDescription>
             </CardHeader>
             <CardContent className="flex-grow">
-               <div
+               <ScrollArea
                 aria-live="polite"
                 className={cn(
-                  "w-full h-full min-h-[400px] rounded-md border p-4 bg-muted/50 overflow-auto",
+                  "w-full h-full min-h-[400px] rounded-md border p-4 bg-muted/50 font-mono",
                   {
                     "border-green-500/50 text-green-700 dark:text-green-400": status === "success",
                     "border-red-500/50 text-red-700 dark:text-red-400": status === "error",
@@ -217,7 +220,7 @@ export default function Home() {
                 )}
               >
                 {getOutputContent()}
-              </div>
+              </ScrollArea>
             </CardContent>
              <CardFooter>
                 <p className="text-xs text-muted-foreground">Click the "Copy" button above to copy the input or the formatted result.</p>
