@@ -252,17 +252,26 @@ export default function Home() {
                 {getOutputContent()}
               </ScrollArea>
             </CardContent>
-             <CardFooter className="flex flex-col gap-2">
-                <p className="text-xs text-muted-foreground w-full text-center">Click the button below to copy the result.</p>
-                <Button onClick={handleCopy} variant="outline" className="relative overflow-hidden w-full">
-                    <span className={cn("transition-transform duration-300 flex items-center gap-2", isCopied ? "translate-y-full" : "translate-y-0")}>
-                        <ClipboardCopy className="h-4 w-4" /> Copy to Clipboard
-                    </span>
-                    <span className={cn("absolute transition-transform duration-300 flex items-center gap-2", isCopied ? "translate-y-0" : "-translate-y-full")}>
-                        <CheckCircle2 className="h-4 w-4 text-green-500"/> Copied!
-                    </span>
-              </Button>
-             </CardFooter>
+             <CardFooter className="flex flex-col items-center p-6 pt-0">
+                <p className="text-xs text-muted-foreground mb-2 w-full text-center">Click the button below to copy the result.</p>
+                <Button
+                  onClick={handleCopy}
+                  variant="outline"
+                  className={cn(
+                    "relative w-full overflow-hidden",
+                    isCopied && "bg-green-500/20 border-green-500/50"
+                  )}
+                >
+                  <span className={cn("transition-transform duration-300 flex items-center justify-center gap-2", isCopied ? "-translate-y-8 opacity-0" : "translate-y-0 opacity-100")}>
+                    <ClipboardCopy className="h-4 w-4" />
+                    Copy to Clipboard
+                  </span>
+                  <span className={cn("absolute inset-0 transition-transform duration-300 flex items-center justify-center gap-2 text-green-500", isCopied ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0")}>
+                    <CheckCircle2 className="h-4 w-4" />
+                    Copied!
+                  </span>
+                </Button>
+              </CardFooter>
           </Card>
         </div>
         
