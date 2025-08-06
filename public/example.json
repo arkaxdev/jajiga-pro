@@ -1,0 +1,24 @@
+{
+  "name": "Sample Project",
+  "version": "1.0.0",
+  "description": "An example JSON file for testing the formatter and validator.",
+  "features": [
+    "validate",
+    "format",
+e    "upload"
+  ],
+  "author": {
+    "name": "AI Developer",
+    "website": "https://example.com"
+  },
+  "active": true,
+  "config": {
+    "retries": 3,
+    "timeout": 5000,
+    "environment": null
+  },
+  "dependencies": {
+    "react": "^18.0.0",
+    "next": "^14.0.0"
+  }
+}
