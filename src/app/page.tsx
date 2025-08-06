@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { Wand2, CheckCircle2, XCircle, Trash2, Upload, FileJson, ClipboardCopy, Sun, Moon } from "lucide-react";
+import { Wand2, CheckCircle2, XCircle, Trash2, Upload, ClipboardCopy, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -116,23 +116,6 @@ export default function Home() {
     setStatus("idle");
   };
 
-  const handleLoadExample = async () => {
-    try {
-      const response = await fetch('/example.json');
-      const data = await response.json();
-      const formattedJson = JSON.stringify(data, null, 2);
-      setJsonInput(formattedJson);
-      setOutput("");
-      setStatus("idle");
-    } catch (error) {
-       toast({
-          variant: "destructive",
-          title: "Failed to load example",
-          description: "Could not fetch the example.json file.",
-        });
-    }
-  };
-
   const handleCopy = () => {
     const textToCopy = status === 'success' && (output.startsWith('{') || output.startsWith('[')) ? output : jsonInput;
     if (!textToCopy) {
@@ -206,30 +189,27 @@ export default function Home() {
                 />
               </ScrollArea>
             </CardContent>
-            <CardFooter className="flex flex-wrap gap-2 justify-start">
-              <Button onClick={handleFormat}>
-                <Wand2 className="mr-2 h-4 w-4" /> Format
-              </Button>
-              <Button onClick={handleValidate} variant="secondary">
-                <CheckCircle2 className="mr-2 h-4 w-4" /> Validate
-              </Button>
-              <Button onClick={handleFileUploadClick} variant="outline">
-                <Upload className="mr-2 h-4 w-4" /> Upload File
-              </Button>
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                className="hidden"
-                accept=".json"
-              />
-               <Button onClick={handleLoadExample} variant="ghost">
-                <FileJson className="mr-2 h-4 w-4" /> Load Example
-              </Button>
-               <Button onClick={handleClear} variant="destructive" className="ml-auto">
-                <Trash2 className="mr-2 h-4 w-4" /> Clear
-              </Button>
-            </CardFooter>
+            <CardFooter className="grid grid-cols-3 gap-2">
+                <Button onClick={handleFormat}>
+                  <Wand2 className="mr-2 h-4 w-4" /> Format
+                </Button>
+                <Button onClick={handleValidate} variant="secondary">
+                  <CheckCircle2 className="mr-2 h-4 w-4" /> Validate
+                </Button>
+                 <Button onClick={handleFileUploadClick} variant="outline">
+                  <Upload className="mr-2 h-4 w-4" /> Upload
+                </Button>
+                <input
+                  type="file"
+                  ref={fileInputRef}
+                  onChange={handleFileChange}
+                  className="hidden"
+                  accept=".json"
+                />
+                 <Button onClick={handleClear} variant="destructive" className="col-start-3">
+                  <Trash2 className="mr-2 h-4 w-4" /> Clear
+                </Button>
+              </CardFooter>
           </Card>
 
           {/* Output Card */}
@@ -256,7 +236,6 @@ export default function Home() {
                 <p className="text-xs text-muted-foreground mb-2 w-full text-center">Click the button below to copy the result.</p>
                 <Button
                   onClick={handleCopy}
-                  variant="outline"
                   className={cn(
                     "relative w-full overflow-hidden",
                     isCopied && "bg-green-500/20 border-green-500/50"
@@ -266,7 +245,7 @@ export default function Home() {
                     <ClipboardCopy className="h-4 w-4" />
                     Copy to Clipboard
                   </span>
-                  <span className={cn("absolute inset-0 transition-transform duration-300 flex items-center justify-center gap-2 text-green-500", isCopied ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0")}>
+                  <span className={cn("absolute inset-0 transition-transform duration-300 flex items-center justify-center gap-2 text-primary-foreground", isCopied ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0")}>
                     <CheckCircle2 className="h-4 w-4" />
                     Copied!
                   </span>
