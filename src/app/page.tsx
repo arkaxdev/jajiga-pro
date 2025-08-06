@@ -252,14 +252,14 @@ export default function Home() {
                 {getOutputContent()}
               </ScrollArea>
             </CardContent>
-             <CardFooter className="flex justify-between items-center">
-                <p className="text-xs text-muted-foreground">Click the "Copy" button to copy the result.</p>
-                <Button onClick={handleCopy} variant="outline" size="icon" className="relative overflow-hidden">
-                    <span className={cn("transition-transform duration-300", isCopied ? "translate-y-full" : "translate-y-0")}>
-                        <ClipboardCopy className="h-4 w-4" />
+             <CardFooter className="flex flex-col gap-2">
+                <p className="text-xs text-muted-foreground w-full text-center">Click the button below to copy the result.</p>
+                <Button onClick={handleCopy} variant="outline" className="relative overflow-hidden w-full">
+                    <span className={cn("transition-transform duration-300 flex items-center gap-2", isCopied ? "translate-y-full" : "translate-y-0")}>
+                        <ClipboardCopy className="h-4 w-4" /> Copy to Clipboard
                     </span>
-                    <span className={cn("absolute transition-transform duration-300", isCopied ? "translate-y-0" : "-translate-y-full")}>
-                        <CheckCircle2 className="h-4 w-4 text-green-500"/>
+                    <span className={cn("absolute transition-transform duration-300 flex items-center gap-2", isCopied ? "translate-y-0" : "-translate-y-full")}>
+                        <CheckCircle2 className="h-4 w-4 text-green-500"/> Copied!
                     </span>
               </Button>
              </CardFooter>
