@@ -1,13 +1,11 @@
 "use client";
 
-import { useState, useRef, type ChangeEvent } from "react";
+import { useState, useRef, type ChangeEvent, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription, CardFooter } from "@/components/ui/card";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
 import { useToast } from "@/hooks/use-toast";
-import { Wand2, CheckCircle2, XCircle, Trash2, Upload, FileJson, ClipboardCopy } from "lucide-react";
+import { Wand2, CheckCircle2, XCircle, Trash2, Upload, FileJson, ClipboardCopy, Sun, Moon } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
@@ -19,6 +17,29 @@ export default function Home() {
   const [status, setStatus] = useState<Status>("idle");
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
+  const [theme, setTheme] = useState('light');
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    setTheme(savedTheme);
+    if (savedTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, []);
+
+  const toggleTheme = () => {
+    const newTheme = theme === 'light' ? 'dark' : 'light';
+    setTheme(newTheme);
+    localStorage.setItem('theme', newTheme);
+    if (newTheme === 'dark') {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  };
+
 
   const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -146,14 +167,22 @@ export default function Home() {
   return (
     <main className="min-h-screen bg-background text-foreground p-4 sm:p-6 md:p-8">
       <div className="max-w-7xl mx-auto">
-        <header className="text-center mb-10">
-          <h1 className="text-4xl md:text-5xl font-bold text-primary">JSON Formatter & Validator</h1>
+        <header className="text-center mb-10 relative">
+          <h1 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-500">
+            JSON Formatter & Validator
+          </h1>
           <p className="text-muted-foreground mt-3 text-lg">A simple and elegant tool to beautify and validate your JSON data.</p>
+           <div className="absolute top-0 right-0">
+            <Button variant="ghost" size="icon" onClick={toggleTheme} aria-label="Toggle theme">
+              <Sun className="h-6 w-6 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+              <Moon className="absolute h-6 w-6 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            </Button>
+          </div>
         </header>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
           {/* Input Card */}
-          <Card className="flex flex-col h-full shadow-lg">
+          <Card className="flex flex-col h-full shadow-lg bg-card/50 backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Input</CardTitle>
               <CardDescription>Paste your JSON below or upload a file.</CardDescription>
@@ -168,7 +197,7 @@ export default function Home() {
                     setOutput('');
                     setStatus('idle');
                   }}
-                  className="h-full min-h-[400px] w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0"
+                  className="h-full min-h-[400px] w-full resize-none border-0 focus-visible:ring-0 focus-visible:ring-offset-0 bg-transparent"
                   aria-label="JSON Input"
                 />
               </ScrollArea>
@@ -186,7 +215,7 @@ export default function Home() {
               <Button onClick={handleFileUploadClick} variant="outline">
                 <Upload className="mr-2 h-4 w-4" /> Upload File
               </Button>
-              <Input
+              <input
                 type="file"
                 ref={fileInputRef}
                 onChange={handleFileChange}
@@ -203,7 +232,7 @@ export default function Home() {
           </Card>
 
           {/* Output Card */}
-          <Card className="flex flex-col h-full shadow-lg">
+           <Card className="flex flex-col h-full shadow-lg bg-card/50 backdrop-blur-sm">
             <CardHeader>
               <CardTitle>Result</CardTitle>
               <CardDescription>Validation or formatting results will appear here.</CardDescription>
@@ -216,7 +245,6 @@ export default function Home() {
                   {
                     "border-green-500/50 text-green-700 dark:text-green-400": status === "success",
                     "border-red-500/50 text-red-700 dark:text-red-400": status === "error",
-                    "text-muted-foreground": status === "idle",
                   }
                 )}
               >
