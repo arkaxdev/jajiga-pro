@@ -18,6 +18,7 @@ export default function Home() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { toast } = useToast();
   const [theme, setTheme] = useState('dark');
+  const [isCopied, setIsCopied] = useState(false);
 
   useEffect(() => {
     const savedTheme = localStorage.getItem('theme') || 'dark';
@@ -138,8 +139,11 @@ export default function Home() {
        toast({ title: "Nothing to copy", description: "There is no content to copy." });
        return;
     }
-    navigator.clipboard.writeText(textToCopy);
-    toast({ title: "Copied to clipboard!", description: "The content has been copied." });
+    navigator.clipboard.writeText(textToCopy).then(() => {
+        setIsCopied(true);
+        toast({ title: "Copied to clipboard!", description: "The content has been copied." });
+        setTimeout(() => setIsCopied(false), 2000);
+    });
   };
 
   const statusIcons = {
@@ -209,9 +213,6 @@ export default function Home() {
               <Button onClick={handleValidate} variant="secondary">
                 <CheckCircle2 className="mr-2 h-4 w-4" /> Validate
               </Button>
-               <Button onClick={handleCopy} variant="outline">
-                <ClipboardCopy className="mr-2 h-4 w-4" /> Copy
-              </Button>
               <Button onClick={handleFileUploadClick} variant="outline">
                 <Upload className="mr-2 h-4 w-4" /> Upload File
               </Button>
@@ -251,8 +252,16 @@ export default function Home() {
                 {getOutputContent()}
               </ScrollArea>
             </CardContent>
-             <CardFooter>
-                <p className="text-xs text-muted-foreground">Click the "Copy" button above to copy the input or the formatted result.</p>
+             <CardFooter className="flex justify-between items-center">
+                <p className="text-xs text-muted-foreground">Click the "Copy" button to copy the result.</p>
+                <Button onClick={handleCopy} variant="outline" size="icon" className="relative overflow-hidden">
+                    <span className={cn("transition-transform duration-300", isCopied ? "translate-y-full" : "translate-y-0")}>
+                        <ClipboardCopy className="h-4 w-4" />
+                    </span>
+                    <span className={cn("absolute transition-transform duration-300", isCopied ? "translate-y-0" : "-translate-y-full")}>
+                        <CheckCircle2 className="h-4 w-4 text-green-500"/>
+                    </span>
+              </Button>
              </CardFooter>
           </Card>
         </div>
